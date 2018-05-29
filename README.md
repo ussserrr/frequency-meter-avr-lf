@@ -1,15 +1,17 @@
 ## Overview
-Frequency meter firmware for ATmega328P MCU. It uses 16-bit Timer/Counter1 (TC1) as a main measuring part of the MCU. Can be used as a standalone solution (no need in PC - LCD is used for indication). See [frequency-meter-avr-hf](https://github.com/ussserrr/frequency-meter-avr-hf) for measuring an HF band.
+Frequency meter firmware for ATmega328P MCU. It uses 16-bit Timer/Counter1 (TC1) as a main measuring part of the MCU. Can be used as a standalone solution (no need in PC - HD44780 compatible LCD is used for indication). See [frequency-meter-avr-hf](https://github.com/ussserrr/frequency-meter-avr-hf) for measuring an HF band.
 
 ```
      __________________________                                     ____
     /▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉\ ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉/
    / ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉ \▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉  ▉▉
-__/__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉_____
+__/__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉__▉▉_______
       1   2   3   4   5   6   7   8   9  10  11  12  13  14  15 /16
 start on                           \                           /
 rising edge                         \                         /
                                      -------------------------
+
+    => 16 reference pulses in one input signal period
 ```
 Configured in "Input capture" mode, TC1 stores a number of internally generated pulses (with known timings) that had been counted during the one period of input signal (filling frequency), so we can find out its frequency as
 ```
@@ -23,14 +25,14 @@ accuracy ~ N_pulses * period
 ```
 value, so to improve it we should whether increase the internal frequency of TC1 (which we can't do in general) or increase the period of the measured signal (i.e. measure LF bands). We also use an averaging to get more accurate results.
 
-The algorithm also detects when input frequency is rapidly changes (e.g. you tune it) and increases refresh rate of LCD indicating.
+The algorithm also detects when input frequency is rapidly changes (e.g. you tune it) and increases refresh rate of LCD indications.
 
 
 ## Pinout
 Pin | Function
 --- | --------
 PB0 (Arduino's pin 8) | Input signal
-Arduino's 0, 1, 2, 3, 4, 6, 7 pins (respective PDx pins) | RS, RW, E, D4-7
+Arduino's 0, 1, 2, 3, 4, 6, 7 pins (respective PDx pins) | RS, RW, E, D4-7 (HD44780 LCD, LiquidCrystal library)
 
 
 ## Build and run
