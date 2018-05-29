@@ -15,9 +15,7 @@ rising edge                         \                         /
 ```
 Configured in "Input capture" mode, TC1 stores a number of internally generated pulses (with known timings) that had been counted during the one period of input signal (filling frequency), so we can find out its frequency as
 ```
-             number_of_counted_ticks
-frequency = -------------------------
-                filling_frequency
+frequency = number_of_counted_ticks * filling_frequency                
 ```
 This method is especially good for LF band as the accuracy there is a parameter of
 ```
